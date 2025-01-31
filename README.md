@@ -1,16 +1,10 @@
 # 🌐 wikipedia2md
 
 [![Test status](https://github.com/poiley/wikipedia2md/actions/workflows/tests.yml/badge.svg)](https://github.com/poiley/wikipedia2md/actions/workflows/tests.yml)
-
 [![Coverage Status](https://coveralls.io/repos/github/poiley/wikipedia2md/badge.svg?branch=main)](https://coveralls.io/github/poiley/wikipedia2md?branch=main)
-
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)  
-
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/poiley/wikipedia2md.svg?style=flat)](https://github.com/poiley/wikipedia2md/releases)
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://www.python.org/downloads/release/python-370/)
-
-![GitHub Release](https://img.shields.io/github/release/poiley/wikipedia2md.svg?style=flat)  
-
-![GitHub Release](https://img.shields.io/github/downloads/poiley/wikipedia2md/total.svg?style=flat)  
 
 Convert Wikipedia articles to Markdown files
 
@@ -22,7 +16,6 @@ Convert Wikipedia articles to Markdown files
 | [🎯 Overview](#-overview) | What the tool does and who it's for |
 | [💻 Command Line Usage](#-command-line-usage) | How to use the command line interface |
 | [🛠️ Code Structure](#️-code-structure) | Technical details of how the code works |
-| [🧹 Code Style Guidelines](#-code-style-guidelines) | Coding conventions and standards |
 | [🤝 Contributing](#-contributing) | How to contribute to the project |
 | [🧪 Testing](#-testing) | How to run the test suite |
 | [🔮 Obsidian Support](#-obsidian-support) | Special features for Obsidian users |
@@ -134,16 +127,6 @@ The application follows a clear logical flow for converting Wikipedia articles t
      - Various helper functions for links, images, and text cleaning
 
 The flow ensures clean, well-formatted Markdown output while preserving the structure and content of the original Wikipedia article.
-
-## 🧹 Code Style Guidelines
-
-We follow these conventions to keep our code clean and maintainable:
-
-1. 📏 **PEP 8** - Follow Python's style guide
-2. 🔤 **Docstrings** - All functions and classes must have descriptive docstrings
-3. 🎯 **Type Hints** - Use Python type hints for better code clarity
-4. 📝 **Comments** - Write clear, concise comments for complex logic
-5. ✨ **Black** - Use Black formatter for consistent code style
 
 ## 🤝 Contributing
 
