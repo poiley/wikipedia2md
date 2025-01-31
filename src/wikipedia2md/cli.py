@@ -277,7 +277,7 @@ def make_markdown_from_page(page, obsidian=False, no_links=False):
             f'wikipedia_url: "{wiki_url}"',
             f'date_converted: "{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}"',
             "tags:",
-            *[f"  - {cat}" for cat in categories[:10]],  # Limit to top 10 categories
+            *[f'  - "{cat.replace(" ", "-").lower().strip()}"' for cat in categories[:10]],  # Limit to top 10 categories
             "---",
             ""
         ])
@@ -303,8 +303,10 @@ def make_markdown_from_page(page, obsidian=False, no_links=False):
         if href := a_tag.get("href", ""):
             if href.startswith("http"):
                 return f"[{text}]({href})"
-            elif href.startswith("/wiki/"):
+            elif href.startswith("/wiki/") and not href.startswith("/wiki/File:"):
                 return f"[{text}](https://en.wikipedia.org{href})"
+            elif href.startswith("/wiki/File:"):
+                return text  # Skip file links as they're usually just references to images
         return text
 
     def image_to_markdown(img_tag):
