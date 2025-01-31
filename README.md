@@ -1,11 +1,18 @@
-# 🌐 wikipedia2md - CLI tool to convert Wikipedia articles to markdown
+# 🌐 wikipedia2md
 
 [![Test status](https://github.com/poiley/wikipedia2md/actions/workflows/tests.yml/badge.svg)](https://github.com/poiley/wikipedia2md/actions/workflows/tests.yml)
 
 [![Coverage Status](https://coveralls.io/repos/github/poiley/wikipedia2md/badge.svg?branch=main)](https://coveralls.io/github/poiley/wikipedia2md?branch=main)
 
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)  
 
-Convert Wikipedia articles to beautiful Markdown files with ease! 📚
+[![Python Version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://www.python.org/downloads/release/python-370/)
+
+![GitHub Release](https://img.shields.io/github/release/poiley/wikipedia2md.svg?style=flat)  
+
+![GitHub Release](https://img.shields.io/github/downloads/poiley/wikipedia2md/total.svg?style=flat)  
+
+Convert Wikipedia articles to Markdown files
 
 ## 📚 Table of Contents
 
