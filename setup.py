@@ -2,20 +2,22 @@ from setuptools import setup, find_packages
 
 setup(
     name="wikipedia2md",
-    version="0.1.0",
+    version=open("version").read(),
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
         "beautifulsoup4>=4.9.0",
         "click>=8.0.0",
         "requests>=2.25.0",
+        "wikipedia>=1.4.0",
+        "markdown>=3.3.4",
     ],
     entry_points={
         "console_scripts": [
             "wikipedia2md=wikipedia2md.cli:main",
         ],
     },
-    author="Benjamin Poile",
+    author="poiley",
     author_email="",
     description="A tool to convert Wikipedia articles to markdown format",
     long_description=open('README.md').read(),
