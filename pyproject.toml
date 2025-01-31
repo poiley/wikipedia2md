@@ -7,7 +7,7 @@ name = "wikipedia2md"
 version = "1.0.2"
 description = "Convert Wikipedia articles to Markdown"
 authors = [
-    {name = "poiley", email = ""},
+    {name = "poiley", email = "benjpoile@gmail.com"},
 ]
 dependencies = [
     "beautifulsoup4",

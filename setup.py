@@ -1,8 +1,11 @@
 from setuptools import setup, find_packages
 
+def get_version():
+    return open("pyproject.toml").read().split("version")[1].replace("=", "").strip().split("\n")[0].strip("\"'")
+
 setup(
     name="wikipedia2md",
-    version="1.0.2",
+    version=get_version(),
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
