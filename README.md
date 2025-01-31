@@ -38,11 +38,11 @@ pip install -e .
 
 ## 🎯 Overview
 
-Wikipedia2MD is a Python tool that transforms Wikipedia articles into well-formatted Markdown files. Perfect for:
-- 📝 Content creators
+`wikipedia2md` is a Python-based Command Line Interface that transforms Wikipedia articles into well-formatted Markdown files. Perfect for:
 - 🎓 Researchers
 - 📚 Knowledge collectors
 - 🤖 Automation enthusiasts
+- 📝 Content creators
 
 ## 💻 Command Line Usage
 
@@ -172,16 +172,18 @@ Example YAML frontmatter:
 ---
 title: "Python (programming language)"
 wikipedia_url: "https://en.wikipedia.org/wiki/Python_(programming_language)"
-date_converted: "2024-02-20 15:30:00"
+date_converted: "2025-01-30 20:44:14"
 tags:
-  - Programming languages
-  - High-level programming languages
-  - Object-oriented programming languages
-  - Python (programming language)
-  - Cross-platform software
-  - Dutch inventions
-  - Class-based programming languages
-  - Programming languages created in 1991
+  - "class-based-programming-languages"
+  - "computer-science-in-the-netherlands"
+  - "concurrent-programming-languages"
+  - "cross-platform-free-software"
+  - "cross-platform-software"
+  - "dutch-inventions"
+  - "dynamically-typed-programming-languages"
+  - "educational-programming-languages"
+  - "high-level-programming-languages"
+  - "information-technology-in-the-netherlands"
 ---
 ```
 
