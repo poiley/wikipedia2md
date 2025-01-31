@@ -6,6 +6,7 @@ import re
 import argparse
 import wikipedia
 from wikipedia import WikipediaPage
+from wikipedia.exceptions import HTTPTimeoutError, PageError, DisambiguationError
 from bs4 import BeautifulSoup
 import logging
 import click
@@ -197,6 +198,13 @@ def infobox_to_markdown(infobox):
                     parts.append(text)
             elif elem.name == 'br':
                 flush_current_text()
+            elif elem.name == 'img':
+                flush_current_text()
+                if src := elem.get('src', ''):
+                    if src.startswith('//'):
+                        src = 'https:' + src
+                    alt = elem.get('alt', 'Image')
+                    parts.append(f"![{alt}]({src})")
             elif elem.string:
                 text = elem.string.strip()
                 # If it's just a comma or whitespace, flush current text and add separator
@@ -483,9 +491,10 @@ def fetch_wiki_page(query: str, lang: str = "en") -> "WikipediaPage":
         
     Raises:
         WikiPageNotFoundError: If no matching page is found
-        wikipedia.PageError: If the page doesn't exist
-        wikipedia.DisambiguationError: If multiple matches are found
+        PageError: If the page doesn't exist
+        DisambiguationError: If multiple matches are found
         ValueError: If language code is invalid
+        click.ClickException: If there's a network error
     """
     global ACCEPTED_URL_PREFIXES
     ACCEPTED_URL_PREFIXES += (f"http://{lang}.wikipedia.org", f"https://{lang}.wikipedia.org")
@@ -501,43 +510,55 @@ def fetch_wiki_page(query: str, lang: str = "en") -> "WikipediaPage":
     logging.info(f"🔍 Searching for {Colors.CYAN}'{query}'{Colors.RESET} in {Colors.CYAN}{iso639_langs[lang].title()}{Colors.RESET}")
 
     # Check if query is a Wikipedia URL
-    if query.startswith(ACCEPTED_URL_PREFIXES):
+    if any(query.startswith(prefix) for prefix in ACCEPTED_URL_PREFIXES):
+        # Ensure URL contains /wiki/ path
+        if '/wiki/' not in query:
+            raise click.ClickException("Invalid Wikipedia URL: URL must contain '/wiki/' in the path")
+        
         # Extract title from URL
         title = query.split('/wiki/')[-1].replace('_', ' ')
-        page = wikipedia.page(title, auto_suggest=False)
-        logging.info(f"📰 Found article from URL: {Colors.CYAN}'{page.title}'{Colors.RESET} - {Colors.GREEN}{page.url}{Colors.RESET}")
-        return page
-        
+        try:
+            page = wikipedia.page(title, auto_suggest=False)
+            logging.info(f"📰 Found article from URL: {Colors.CYAN}'{page.title}'{Colors.RESET} - {Colors.GREEN}{page.url}{Colors.RESET}")
+            return page
+        except HTTPTimeoutError as e:
+            raise click.ClickException(str(e))
+
     try:
         page = wikipedia.page(query, auto_suggest=False)
         logging.info(f"📰 Found article: {Colors.CYAN}'{page.title}'{Colors.RESET} - {Colors.GREEN}{page.url}{Colors.RESET}")
         return page
-    except (wikipedia.PageError, wikipedia.DisambiguationError) as e:
+    except HTTPTimeoutError as e:
+        raise click.ClickException(str(e))
+    except (PageError, DisambiguationError) as e:
         logging.warning(f"⚠️ Direct match for '{query}' failed. Attempting a fallback search.")
         
-        # Fallback if direct match fails
-        search_results = wikipedia.search(query, results=5)
-        if not search_results:
-            raise WikiPageNotFoundError(f"No matches found for '{query}'")
+        try:
+            # Fallback if direct match fails
+            search_results = wikipedia.search(query, results=5)
+            if not search_results:
+                raise WikiPageNotFoundError(f"No matches found for '{query}'")
 
-        if isinstance(e, wikipedia.DisambiguationError):
-            click.echo("📡 Multiple matches found. Please choose one of the following:")
-            for idx, option in enumerate(search_results, start=1):
-                click.echo(f"{idx}. {option}")
-            choice = click.prompt("Enter a number (or press Enter to cancel)", type=str, default="", show_default=False)
+            if isinstance(e, DisambiguationError):
+                click.echo("📡 Multiple matches found. Please choose one of the following:")
+                for idx, option in enumerate(search_results, start=1):
+                    click.echo(f"{idx}. {option}")
+                choice = click.prompt("Enter a number (or press Enter to cancel)", type=str, default="", show_default=False)
 
-            if not choice.isdigit():
-                raise WikiPageNotFoundError("No valid choice provided")
+                if not choice.isdigit():
+                    raise WikiPageNotFoundError("No valid choice provided")
 
-            choice_num = int(choice)
-            if choice_num < 1 or choice_num > len(search_results):
-                raise WikiPageNotFoundError("Choice out of range")
+                choice_num = int(choice)
+                if choice_num < 1 or choice_num > len(search_results):
+                    raise WikiPageNotFoundError("Choice out of range")
 
-            chosen_title = search_results[choice_num - 1]
-            page = wikipedia.page(chosen_title, auto_suggest=False)
-            
-            logging.info(f"📰 Found article: {Colors.GREEN}'{page.title}'{Colors.RESET}")
-            return page
+                chosen_title = search_results[choice_num - 1]
+                page = wikipedia.page(chosen_title, auto_suggest=False)
+                
+                logging.info(f"📰 Found article: {Colors.GREEN}'{page.title}'{Colors.RESET}")
+                return page
+        except HTTPTimeoutError as e:
+            raise click.ClickException(str(e))
         
         raise  # Re-raise the original exception if not handled
 
@@ -627,11 +648,11 @@ def main(title, url, output_dir, obsidian, no_links, verbose, loglevel):
             logging.info(f"✅ Successfully created {Colors.CYAN}'{file_path}'{Colors.RESET}")
             return 0
 
-        except (wikipedia.PageError, WikiPageNotFoundError) as e:
+        except (PageError, WikiPageNotFoundError) as e:
             click.echo(f"❌ Error: {str(e)}", err=True)
             sys.exit(1)
-        except Exception as e:
-            click.echo(f"❌ Fatal error: {str(e)}", err=True)
+        except click.ClickException as e:
+            click.echo(f"❌ Error: {str(e)}", err=True)
             sys.exit(1)
 
     except Exception as e:

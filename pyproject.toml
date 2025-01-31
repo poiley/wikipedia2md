@@ -2,10 +2,51 @@
 requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.pytest.ini_options]
-pythonpath = [
-    "src"
+[project]
+name = "wikipedia2md"
+version = "1.0.2"
+description = "Convert Wikipedia articles to Markdown"
+authors = [
+    {name = "poiley", email = "benjpoile@gmail.com"},
 ]
-testpaths = [
-    "tests"
+dependencies = [
+    "beautifulsoup4",
+    "click",
+    "wikipedia",
+]
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+wikipedia2md = "wikipedia2md.cli:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+testpaths = ["tests"]
+addopts = "--cov=src/wikipedia2md --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src/wikipedia2md"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
 ] 
