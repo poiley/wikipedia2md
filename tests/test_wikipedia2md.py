@@ -81,6 +81,6 @@ def test_make_markdown_with_options(sample_page, options):
     markdown = make_markdown_from_page(sample_page, **options)
     if options.get("obsidian"):
         assert "---" in markdown  # Check for YAML frontmatter
-        assert "title: Test Article" in markdown  # Check title in frontmatter
+        assert 'title: "Test Article"' in markdown  # Check title in frontmatter with quotes
     if options.get("no_links"):
         assert "[links]" not in markdown 

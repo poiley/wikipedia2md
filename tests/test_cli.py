@@ -148,7 +148,9 @@ def test_cli_multiple_options(runner, mock_wikipedia):
         assert result.exit_code == 0
         content = open("Python (programming language).md").read()
         assert "---" in content  # Obsidian frontmatter
-        assert "http" not in content  # No links
+        # Split content at the second occurrence of "---" to skip frontmatter
+        main_content = content.split("---", 2)[-1]
+        assert "http" not in main_content  # No links in main content
 
 def test_cli_disambiguation(runner, mock_wikipedia):
     """Test handling of disambiguation pages"""

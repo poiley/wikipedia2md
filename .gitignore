@@ -37,3 +37,4 @@ ENV/
 # Project specific
 *.md
 !README.md 
+.coverage
